@@ -1,0 +1,25 @@
+{
+  "kind": "product",
+  "data": {
+    "schemaVersion": 2, "id": "p-1001", "entityId": "e-1001", "slug": "trail-boot-womens",
+    "canonicalUrl": "https://example.com/p/trail-boot-womens", "title": "Trail Boot (Women's)", "brand": "Fixture Co",
+    "description": "Synthetic fixture.", "bullets": ["Waterproof upper", "Rubber sole"], "status": "active",
+    "seo": {"indexable": true, "state": "eligible"},
+    "category": {"slug": "shoes/boots", "name": "Boots", "path": [{"slug": "shoes", "name": "Shoes"}, {"slug": "shoes/boots", "name": "Boots"}]},
+    "media": [{"url": "https://example.com/img/p-1001.avif", "alt": "Trail Boot in brown", "width": 800, "height": 800, "isPrimary": true}],
+    "attributes": [{"name": "Material", "value": "Leather", "unit": null}],
+    "rating": {"average": 4.4, "count": 87}, "currency": "USD", "tax": {"code": null, "rate": null},
+    "axes": [{"name": "size", "options": [{"value": "7", "label": "7"}, {"value": "8", "label": "8"}]}],
+    "variants": [
+      {"sku": "TB-7", "name": "Size 7", "options": {"size": "7"}, "priceCents": 8999, "listPriceCents": 11999,
+       "discount": {"kind": "sale", "amountCents": 3000, "percentOff": 25}, "sellable": true,
+       "availability": {"status": "in_stock", "quantity": 12}, "maxOrderQuantity": 5},
+      {"sku": "TB-8", "name": "Size 8", "options": {"size": "8"}, "priceCents": 8999, "listPriceCents": null,
+       "discount": null, "sellable": true, "availability": {"status": "unknown", "quantity": null}, "maxOrderQuantity": 5},
+      {"sku": "TB-9", "name": "Size 9", "options": {"size": "9"}, "priceCents": null, "listPriceCents": null,
+       "discount": null, "sellable": false, "availability": {"status": "in_stock", "quantity": 3}, "maxOrderQuantity": 5}
+    ],
+    "defaultSku": "TB-7", "family": null, "seller": null,
+    "contentVersion": "sha256-0000000000000000000000000000000000000000000000000000000000000000", "updatedAt": null
+  }
+}

@@ -1,5 +1,13 @@
 # CLAUDE.md
 
+> **Ventari override (proposal branch, 2026-10-23).** This repository is the Ventari mobile app, forked from
+> Bagisto. The owner decided to replace the Bagisto backend with Ventari's own services. Where this file or
+> `plan.md` says to use only the Bagisto GraphQL API or to validate against a Bagisto server, that is upstream
+> history and does not apply to Ventari work. New work follows `docs/ventari/README.md`:
+> Ventari catalog BFF v2 and mobile commerce BFF only, integer-cent server money, no client-computed totals,
+> tokens only in Keychain/Keystore, idempotency keys on every mutation. Commits and pushes go only to the
+> branch the owner authorizes.
+
 Guidance for Claude Code when working in this repository.
 
 ## Mandatory skills: apply to EVERY prompt
