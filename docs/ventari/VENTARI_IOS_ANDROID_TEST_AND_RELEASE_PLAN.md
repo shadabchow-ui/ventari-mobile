@@ -3,16 +3,42 @@
 **Status:** PROPOSAL. No App Store or Google Play release is authorized by this plan.
 **Rule:** a result counts only if it was run at a named commit, in a named environment, and its evidence is recorded. An iOS check that was not run on macOS is reported as **NOT RUN**, never as passing.
 
-## 1. What was run for this proposal (2026-10-23, Linux, Flutter 3.47.7)
+## 1. What has actually run (2026-10-23)
 
-| Check | Result |
-|---|---|
-| `flutter test` on upstream `18a2c27` | 288 pass; 19 test files fail to compile (fork does not build from a clean clone; see the source audit §2) |
-| `flutter test test/ventari` on this branch | **48 pass, 0 fail** |
-| `flutter analyze lib/ventari test/ventari` | **No issues** |
-| Android build | **NOT RUN**: no Android SDK in this environment |
-| iOS build, simulator, VoiceOver, signing | **NOT RUN**: requires macOS and Xcode |
-| Device E2E (Maestro) | **NOT RUN** |
+| Check | Where | Result |
+|---|---|---|
+| `flutter test`, clean clone of upstream `18a2c27` | Linux, Flutter 3.47.7 | 288 pass; **19 test files fail to compile** (see the source audit §2) |
+| `flutter test`, **clean clone of this branch** (after the clean-build fixes) | Linux, Flutter 3.47.7 | **421 pass, 0 fail** |
+| `flutter analyze --no-fatal-infos --no-fatal-warnings`, clean clone | Linux | exit 0; 47 info/warning issues (upstream baseline), 0 errors |
+| `flutter analyze lib/ventari test/ventari` | Linux | No issues |
+| Android debug APK | GitHub Actions `android` job (`.github/workflows/ventari-mobile-ci.yml`) | **NOT RUN at the time of writing**. The result is recorded on PR #1 and is build evidence only |
+| iOS simulator build | GitHub Actions `ios` job, manual dispatch only; or the owner's Mac | **NOT RUN** |
+| iOS device build, signing, VoiceOver | owner's Mac with Xcode | **NOT RUN** |
+| Device E2E (Maestro) | — | **NOT RUN** |
+
+No row in this table certifies a platform. Certification is VJ-104 (iOS) and VJ-105 (Android). Each needs all of §2–§5 on a named commit.
+
+### 1.1 Platform-build plan (commands, in order)
+
+**Android, Linux or CI (no Ventari services, no secrets):**
+1. `flutter pub get`.
+2. `flutter analyze --no-fatal-infos --no-fatal-warnings`, then `flutter test`.
+3. `flutter build apk --debug`, with JDK 17. Gradle installs NDK `28.2.13676358` if the runner lacks it.
+4. Record `sha256sum build/app/outputs/flutter-apk/app-debug.apk` and the commit.
+5. Later, after VJ-144 adds flavors: `flutter build apk --debug --flavor dev`, then `flutter build appbundle --release --flavor staging`. Release signing comes from the CI secret store only (VJ-159).
+6. Emulator smoke on API 35 and API 36: `adb install`, `adb shell am start -W -n <pkg>/.MainActivity`, then the Maestro suite (VJ-167).
+
+**iOS, macOS with Xcode only (owner's Mac, or the manual `ios` CI job, OD-46):**
+1. `flutter pub get`, then `cd ios && pod install`.
+2. `flutter build ios --simulator --debug`. This build needs no signing.
+3. `xcrun simctl boot "<device>"`, then `xcrun simctl install booted build/ios/iphonesimulator/Runner.app`, then `xcrun simctl launch booted <bundle id>`.
+4. Run the Maestro iOS suite. Record the Xcode version, simulator runtime and commit.
+5. Device and signed builds (`flutter build ipa`) run only in the release workflow, with Apple signing from the secret store (APPLE_SIGNING lock).
+
+Known build risks to watch on the first runs:
+- The upstream Android `applicationId` (`com.webkul.bagisto.mobikul`) and the tracked Firebase configs are still Webkul's. VJ-144 replaces them.
+- `pubspec.lock` was produced by an older Flutter. Flutter 3.47.7 refreshes `intl` and `matcher` during `pub get`, and the refreshed lock is committed in VJ-144.
+- On iOS, CocoaPods resolution for `firebase_messaging` and `google_mlkit_*` is unverified.
 
 ## 2. Test layers
 

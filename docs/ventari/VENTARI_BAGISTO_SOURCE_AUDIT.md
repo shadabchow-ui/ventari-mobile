@@ -28,11 +28,13 @@ None of these blocks the plan. VJ-142 measures them before scaling.
 | `flutter pub get` | OK (Flutter 3.47.7 rewrites `pubspec.lock` and `analysis_options.yaml`; reverted, not committed) |
 | `flutter test` at 18a2c27 | **288 pass, 19 test files fail to compile** |
 | Root cause of the compile failures | `lib/core/constants/api_constants.dart` is a committed placeholder that lacks `bagistoPublicBaseUrl`, which `home_page.dart:201,583` and `image_carousel.dart:80` require. `pubspec.yaml` also declares `assets/ml/`, which `.gitignore:58-59` excludes, so the directory is missing. **A fresh clone does not compile.** |
+| Clean-build fixes on this branch | `bagistoPublicBaseUrl` placeholder added to `api_constants.dart`; `assets/ml/` tracked with a README only (no model); two tests in `home_theme_fixes_test.dart` no longer depend on a developer's private LAN origin (`192.168.x`); they use an `example.com` deployment URL with the same path prefix |
+| `flutter test`, clean clone of this branch | **421 pass, 0 fail** |
 | `flutter analyze lib/ventari test/ventari` (new code on this branch) | No issues |
 | `flutter test test/ventari` (new code on this branch) | **48 pass, 0 fail** |
 | Android build | **NOT RUN** (no Android SDK in this environment) |
 | iOS build | **NOT RUN** (requires macOS and Xcode) |
-| CI | none (only `.github/ISSUE_TEMPLATE`) |
+| CI | upstream: none. This branch adds `.github/workflows/ventari-mobile-ci.yml`: analyze and test, plus an Android debug APK on every PR. The iOS simulator build runs on manual dispatch only |
 
 ## 3. Licence and attribution
 

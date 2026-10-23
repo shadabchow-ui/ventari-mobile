@@ -1,0 +1,85 @@
+name: Ventari mobile CI
+
+# Evidence for docs/ventari/VENTARI_IOS_ANDROID_TEST_AND_RELEASE_PLAN.md.
+# A green run is build evidence, not platform certification (VJ-104 / VJ-105).
+# No secrets, signing, store upload or network calls to Ventari services.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      ios:
+        description: Also build the iOS simulator app on a hosted macOS runner (billed minutes, OD-46)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ventari-mobile-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The version the proposal branch was verified with. pubspec.lock pins SDK-bundled
+  # packages, so `pub get` on another Flutter version rewrites it.
+  FLUTTER_VERSION: 3.47.7
+
+jobs:
+  test:
+    name: Analyze and test (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install Flutter
+        run: |
+          git clone --depth 1 --branch "$FLUTTER_VERSION" https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - run: flutter --version
+      - run: flutter pub get
+      - name: Analyze Ventari code (strict)
+        run: flutter analyze lib/ventari test/ventari
+      - name: Analyze whole app (errors only; upstream infos and warnings are the known baseline)
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+      - name: Test
+        run: flutter test
+
+  android:
+    name: Android debug APK (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    needs: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install Flutter
+        run: |
+          git clone --depth 1 --branch "$FLUTTER_VERSION" https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - name: Use the runner's JDK 17 (android/app/build.gradle.kts targets Java 17)
+        run: echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
+      - run: flutter pub get
+      - name: Build
+        run: flutter build apk --debug
+      - name: Record the artifact identity
+        run: |
+          ls -l build/app/outputs/flutter-apk/app-debug.apk
+          sha256sum build/app/outputs/flutter-apk/app-debug.apk
+
+  ios:
+    name: iOS simulator build (macOS, manual)
+    if: github.event_name == 'workflow_dispatch' && inputs.ios
+    runs-on: macos-15
+    timeout-minutes: 60
+    needs: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install Flutter
+        run: |
+          git clone --depth 1 --branch "$FLUTTER_VERSION" https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - run: flutter pub get
+      - name: Build (no signing)
+        run: flutter build ios --simulator --debug

@@ -2,6 +2,12 @@
 const String bagistoEndpoint =
     'https://your-bagisto-domain.com/graphql';
 
+/// Public storefront origin used to resolve relative links and image URLs.
+/// Placeholder like [bagistoEndpoint]; a fresh clone must compile without
+/// local edits. Ventari builds take their origins from VentariConfig
+/// (`--dart-define`), not from this file.
+const String bagistoPublicBaseUrl = 'https://your-bagisto-domain.com';
+
 /// Storefront key for Bagisto API
 const String storefrontKey =
     'your_storefront_key_here';
