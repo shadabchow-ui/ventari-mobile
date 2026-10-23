@@ -11,7 +11,7 @@
 | `flutter test`, **clean clone of this branch** (after the clean-build fixes) | Linux, Flutter 3.47.7 | **421 pass, 0 fail** |
 | `flutter analyze --no-fatal-infos --no-fatal-warnings`, clean clone | Linux | exit 0; 47 info/warning issues (upstream baseline), 0 errors |
 | `flutter analyze lib/ventari test/ventari` | Linux | No issues |
-| Android debug APK | GitHub Actions `android` job (`.github/workflows/ventari-mobile-ci.yml`) | First run (71a5384, run 39945157309): **FAILED**. The fork pins Android Gradle Plugin 8.9.2, and Flutter 3.47.7 refuses anything below 8.11.1. The fork now pins 8.11.1; the next run is the result. It is build evidence only |
+| Android debug APK | GitHub Actions `android` job (`.github/workflows/ventari-mobile-ci.yml`) | First run (71a5384, run 39945157309): **FAILED**. The fork pins Android Gradle Plugin 8.9.2, and Flutter 3.47.7 refuses anything below 8.11.1. With AGP 8.11.1, run 39946237957 on 0136454 **BUILT** `app-debug.apk` (216,769,190 bytes, sha256 `9d4a1b508c79e4068859ae2cff1ba9d9d138eb2190a2b0ebb6b46b3ec06a883b`). Build evidence only: not installed, launched or tested on a device or emulator |
 | iOS simulator build | GitHub Actions `ios` job, manual dispatch only; or the owner's Mac | **NOT RUN** |
 | iOS device build, signing, VoiceOver | owner's Mac with Xcode | **NOT RUN** |
 | Device E2E (Maestro) | — | **NOT RUN** |
