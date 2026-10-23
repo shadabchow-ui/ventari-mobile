@@ -4,10 +4,9 @@ name: Ventari mobile CI
 # A green run is build evidence, not platform certification (VJ-104 / VJ-105).
 # No secrets, signing, store upload or network calls to Ventari services.
 
+# Manual only (owner cost policy, 2026-10-23): hosted runner minutes are billed, and
+# Linux builds are moving to the owner's VPS. Run it from the Actions tab when needed.
 on:
-  pull_request:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       ios:
