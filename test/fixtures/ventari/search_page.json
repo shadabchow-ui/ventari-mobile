@@ -1,0 +1,23 @@
+{
+  "query": {"normalized": "boots"},
+  "sort": "relevance",
+  "applied": {"q": "boots"},
+  "category": null,
+  "items": [
+    {"id": "p-1001", "slug": "trail-boot-womens", "title": "Trail Boot (Women's)", "brand": "Fixture Co", "categorySlug": "shoes/boots",
+     "priceCents": 8999, "listPriceCents": 11999, "discount": {"kind": "sale", "amountCents": 3000, "percentOff": 25},
+     "currency": "USD", "inStock": true, "rating": {"average": 4.4, "count": 87},
+     "image": {"url": "https://example.com/img/p-1001.avif", "width": 800, "height": 800, "alt": "Trail Boot in brown"},
+     "variantCount": 6, "indexable": true, "futureField": {"kept": true}},
+    {"id": "p-1002", "slug": "city-boot", "title": "City Boot", "brand": "Fixture Co", "categorySlug": "shoes/boots",
+     "priceCents": 129900, "listPriceCents": null, "discount": null, "currency": "USD", "inStock": false, "rating": null,
+     "image": {"url": "http://example.com/img/cleartext.jpg", "width": 800, "height": 800, "alt": "City Boot"},
+     "variantCount": 1, "indexable": false}
+  ],
+  "total": {"value": 1000, "relation": "gte"},
+  "nextCursor": "c2Vlay0yNA",
+  "facets": [
+    {"key": "brand", "label": "Brand", "approximate": false,
+     "values": [{"value": "fixture-co", "label": "Fixture Co", "count": 2, "selected": false}]}
+  ]
+}

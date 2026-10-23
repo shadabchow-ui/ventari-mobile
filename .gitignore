@@ -55,8 +55,10 @@ test_maestro_mcp.sh
 *.keystore
 jks_details/
 
-# ML models - large files not needed in git
-assets/ml/
+# ML models - large files not needed in git. The directory itself stays tracked
+# (README only) because pubspec.yaml declares it as an asset directory.
+assets/ml/*
+!assets/ml/README.md
 # Images - ignore by default, but keep docs assets used in GitHub/README tracked
 **/*.png
 **/*.jpg

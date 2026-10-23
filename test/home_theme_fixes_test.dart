@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:bagisto_flutter/core/constants/api_constants.dart';
 import 'package:bagisto_flutter/core/graphql/queries.dart';
 import 'package:bagisto_flutter/features/home/data/models/home_models.dart';
 import 'package:bagisto_flutter/features/home/data/repository/home_repository.dart';
@@ -80,6 +79,10 @@ Map<String, dynamic> _category(int id, String name, {int? parentId}) => {
     'slug': name.toLowerCase(),
   },
 };
+
+/// A deployment with a path prefix, independent of the placeholder in
+/// lib/core/constants/api_constants.dart.
+const _deploymentBaseUrl = 'https://shop.example.com/Bagisto-Api/new-setup/public/';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -220,12 +223,12 @@ void main() {
     expect(columns, hasLength(2));
     expect(links.map((link) => link.title), ['About Us', 'Privacy Policy']);
     expect(
-      links.first.resolveUrl(bagistoPublicBaseUrl),
-      'http://192.168.15.239/Bagisto-Api/new-setup/public/page/about-us',
+      links.first.resolveUrl(_deploymentBaseUrl),
+      'https://shop.example.com/Bagisto-Api/new-setup/public/page/about-us',
     );
     expect(
-      links.last.resolveUrl(bagistoPublicBaseUrl),
-      'http://192.168.15.239/Bagisto-Api/new-setup/public/page/privacy-policy',
+      links.last.resolveUrl(_deploymentBaseUrl),
+      'https://shop.example.com/Bagisto-Api/new-setup/public/page/privacy-policy',
     );
   });
 
@@ -282,8 +285,8 @@ void main() {
     );
 
     expect(
-      banner.fullImageUrl(bagistoPublicBaseUrl),
-      'http://192.168.15.239/Bagisto-Api/new-setup/public/storage/themes/default/sections/1/banner.webp',
+      banner.fullImageUrl(_deploymentBaseUrl),
+      'https://shop.example.com/Bagisto-Api/new-setup/public/storage/themes/default/sections/1/banner.webp',
     );
   });
 }
